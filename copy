@@ -1,0 +1,691 @@
+Media Player
+Activitymain.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MainActivity"
+android:background="#7712"
+android:orientation="vertical">
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Astronomia"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintLeft_toLeftOf="parent"
+app:layout_constraintRight_toRightOf="parent"
+app:layout_constraintTop_toTopOf="parent"
+android:layout_margin="30dp"
+android:fontFamily="cursive"
+android:textSize="30dp"
+android:id="@+id/songname"/>
+<Button
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginRight="30dp"
+android:layout_marginLeft="30dp"
+android:text="Play"
+android:id="@+id/play"
+/>
+<Button
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginRight="30dp"
+android:layout_marginLeft="30dp"
+android:text="Pause"
+android:id="@+id/pause"
+/>
+<Button
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginRight="30dp"
+android:layout_marginLeft="30dp"
+android:text="Forward"
+android:id="@+id/forward"
+/>
+<Button
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginRight="30dp"
+android:layout_marginLeft="30dp"
+android:text="Rewind"
+android:id="@+id/rewind"
+/>
+<Button
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginRight="30dp"
+android:layout_marginLeft="30dp"
+android:text="Stop"
+android:id="@+id/stop"
+/>
+<Button
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginRight="30dp"
+android:layout_marginLeft="30dp"
+android:text="Restart"
+android:id="@+id/restart"
+/>
+</LinearLayout>
+MainActivity.java
+package com.example.mediaplayer;
+import androidx.appcompat.app.AppCompatActivity;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
+Button play, forward, rewind, pause, stop, reset;
+MediaPlayer mediaPlayer ;
+int starttime = 0 ; // startime is 0s
+int stopttime = 0; // stoptime is 0s by default
+int forwardtime = 5000 ; // 5s for forward
+int backwardtime = 5000 ; // 5s for backwardtime
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+play = findViewById(R.id.play);
+forward = findViewById(R.id.forward);
+rewind = findViewById(R.id.rewind);
+pause = findViewById(R.id.pause);
+stop = findViewById(R.id.stop);
+reset = findViewById(R.id.restart);
+play.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+mediaPlayer = MediaPlayer.create(MainActivity.this,
+R.raw.astronomia) ;
+Toast.makeText(MainActivity.this, "playing",
+Toast.LENGTH_SHORT).show();
+mediaPlayer.start();
+}
+});
+pause.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+Toast.makeText(MainActivity.this, "pause",
+Toast.LENGTH_SHORT).show();
+mediaPlayer.pause();
+}
+});
+stop.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+Toast.makeText(MainActivity.this, "Stop",
+Toast.LENGTH_SHORT).show();
+mediaPlayer.stop();
+}
+});
+reset.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+Toast.makeText(MainActivity.this, "Resting",
+Toast.LENGTH_SHORT).show();
+mediaPlayer.seekTo(starttime);
+mediaPlayer.start();
+}
+});
+forward.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+Toast.makeText(MainActivity.this, "Forward",
+Toast.LENGTH_SHORT).show();
+int currentpos = mediaPlayer.getCurrentPosition() ;
+if((currentpos+forwardtime) <= (stopttime =
+mediaPlayer.getDuration())){
+mediaPlayer.seekTo(currentpos+forwardtime);
+}
+}
+});
+rewind.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+Toast.makeText(MainActivity.this, "Rewind",
+Toast.LENGTH_SHORT).show();
+int currentpos = mediaPlayer.getCurrentPosition() ;
+if((currentpos-backwardtime) >= starttime)
+{
+mediaPlayer.seekTo(currentpos-backwardtime);
+}
+}
+});
+}
+}
+ListView
+Activitymain.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MainActivity">
+<ListView
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:id="@+id/list"/>
+</LinearLayout>
+Mainactivity.java
+package com.example.listview1;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
+ListView myList;
+String countryList[];
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+myList = findViewById(R.id.list);
+countryList = getResources().getStringArray(R.array.classmates);
+ArrayAdapter<String> myAdapter = new
+ArrayAdapter<String>(this,R.layout.textview_layout,countryList);
+myList.setAdapter(myAdapter);
+myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+@Override
+public void onItemClick(AdapterView<?> adapterView, View view, int
+i, long l) {
+Toast.makeText(MainActivity.this, "You have clicked"
++adapterView.getItemAtPosition(i),
+Toast.LENGTH_SHORT).show();
+}
+});
+}
+}
+Textview_layout.xml
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:text="Content"
+android:textSize="40dp">
+</TextView>
+Strings.xml
+<resources>
+<string name="app_name">ListView1</string>
+<string-array name="classmates">
+<item>Nirmal</item>
+<item>Bosss</item>
+<item>Rodman</item>
+<item>Raja</item>
+</string-array>
+</resources>
+IMPLICIT EXPLICIT
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MainActivity"
+android:orientation="vertical">
+<EditText
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:id="@+id/myphone"
+android:hint="Enter the Phone Number"
+android:layout_margin="20dp"
+/>
+<Button
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:id="@+id/call"
+android:text="CALL"
+android:layout_margin="20dp"/>
+</LinearLayout>
+androidManifest.xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.implicit_explicit_intent">
+<uses-permission android:name="android.permission.CALL_PHONE"/>
+<application
+android:allowBackup="true"
+android:icon="@mipmap/ic_launcher"
+android:label="@string/app_name"
+android:roundIcon="@mipmap/ic_launcher_round"
+android:supportsRtl="true"
+android:theme="@style/Theme.Implicit_explicit_intent">
+<activity
+android:name=".MainActivity"
+android:exported="true">
+<intent-filter>
+<action android:name="android.intent.action.MAIN" />
+<category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+</activity>
+</application>
+</manifest>
+MainActivity.java
+package com.example.implicit_explicit_intent;
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+public class MainActivity extends AppCompatActivity {
+EditText phoneNumberToCall ;
+Button call ;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+call = findViewById(R.id.call) ;
+phoneNumberToCall = findViewById(R.id.myphone) ;
+call.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+Uri myUri = Uri.parse("tel:"+phoneNumberToCall.getText().toString());
+Intent it = new Intent(Intent.ACTION_DIAL, myUri) ;
+startActivity(it);
+}
+});
+}
+}
+Output
+
+CALC
+package com.example.calculatar;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+Button ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,ZERO;
+Button PLUS,MINUS,MULTIPLY,DIVIDE,CLEAR,ISEQUALTO;
+EditText res;
+String operator ="";
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ONE=findViewById(R.id.ONE);
+        TWO=findViewById(R.id.TWO);
+        THREE=findViewById(R.id.THREE);
+        FOUR=findViewById(R.id.FOUR);
+        FIVE=findViewById(R.id.FIVE);
+        SIX=findViewById(R.id.SIX);
+        SEVEN=findViewById(R.id.SEVEN);
+        EIGHT=findViewById(R.id.EIGHT);
+        NINE=findViewById(R.id.NINE);
+        ZERO=findViewById(R.id.ZERO);
+        PLUS=findViewById(R.id.PLUS);
+        MINUS=findViewById(R.id.MINUS);
+        MULTIPLY=findViewById(R.id.MULTIPLY);
+        DIVIDE=findViewById(R.id.DIVIDE);
+        CLEAR=findViewById(R.id.CLEAR);
+        ISEQUALTO=findViewById(R.id.ISEQUALTO);
+        res=findViewById(R.id.RESULT);
+
+    ONE.setOnClickListener(this);
+        TWO.setOnClickListener(this);
+        THREE.setOnClickListener(this);
+        FOUR.setOnClickListener(this);
+        FIVE.setOnClickListener(this);
+        SIX.setOnClickListener(this);
+        SEVEN.setOnClickListener(this);
+        EIGHT.setOnClickListener(this);
+        NINE.setOnClickListener(this);
+        ZERO.setOnClickListener(this);
+
+
+        PLUS.setOnClickListener(this);
+        MINUS.setOnClickListener(this);
+        DIVIDE.setOnClickListener(this);
+        MULTIPLY.setOnClickListener(this);
+        ISEQUALTO.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()) {
+            case R.id.ONE:
+                res.append("1");
+                break;
+            case R.id.TWO:
+                res.append("2");
+                break;
+// case for rest of the button 3-9 here
+            case R.id.PLUS:
+                res.append("+");
+                operator = "+";
+                break;
+            case R.id.MINUS:
+                res.append("-");
+                operator = "-";
+                break;
+            case R.id.MULTIPLY:
+                res.append("*");
+                operator = "*";
+                break;
+            case R.id.DIVIDE:
+                res.append("/");
+                operator = "/";
+                break;
+            case R.id.ISEQUALTO:
+               double finalResult = evaluateExpression(res.getText().toString(), operator);
+                res.setText(String.valueOf(finalResult));
+                break;
+        }
+}
+
+    private double evaluateExpression(String toString, String operator) {
+        String[] tokens = toString.split("\\+|-|\\*|\\/");
+        double firstOperand = Double.parseDouble(tokens[0]);
+        double secondOperand = Double.parseDouble(tokens[1]);
+        switch(operator)
+        {
+            case "+": return firstOperand + secondOperand;
+            case "-": return firstOperand - secondOperand;
+            case "*": return firstOperand * secondOperand;
+            case "/": return firstOperand / secondOperand;
+            default: return 0;
+        }
+
+    }
+    }
+Xylophone:
+Main.dart:
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/src/audio_cache.dart';
+import 'package:flutter/services.dart';
+void main() {
+runApp(MaterialApp(
+home: Scaffold(
+appBar: AppBar(
+title: Text('XYLOPHONE'),
+centerTitle: true,
+),
+body: XyloPage(),
+),
+));
+}
+class XyloPage extends StatefulWidget {
+@override
+_XyloPageState createState() => _XyloPageState();
+}
+class _XyloPageState extends State<XyloPage> {
+void PlayAudio(int i) {
+final player = AudioCache();
+player.play("note$i.wav");
+}
+void playSound(int i) async {
+AudioPlayer player = AudioPlayer();
+String audioasset = 'assets/note$i.wav';
+ByteData bytes = await rootBundle.load(audioasset);
+Uint8List audioBytes =
+bytes.buffer.asUint8List(bytes.offsetInBytes,
+bytes.lengthInBytes);
+int result = await player.playBytes(audioBytes);
+if (result == 1) {
+print("Audio Playing");
+} else {
+print("error");
+}
+}
+@override
+Widget build(BuildContext context) {
+return Column(
+crossAxisAlignment: CrossAxisAlignment.stretch,
+children: [
+Expanded(
+child: TextButton(
+style: TextButton.styleFrom(backgroundColor:
+Colors.red),
+onPressed: () {
+playSound(1);
+},
+child: Text("First"),
+),
+),
+Expanded(
+child: TextButton(
+style: TextButton.styleFrom(backgroundColor:
+Colors.yellow),
+onPressed: () {
+playSound(2);
+},
+child: Text("Second"),
+),
+),
+Expanded(
+child: TextButton(
+style: TextButton.styleFrom(backgroundColor:
+Colors.pink),
+onPressed: () {
+playSound(3);
+},
+child: Text("Third"),
+),
+),
+Expanded(
+child: TextButton(
+style: TextButton.styleFrom(backgroundColor:
+Colors.brown),
+onPressed: () {
+PlayAudio(4);
+},
+child: Text("Fourth"),
+),
+),
+Expanded(
+child: TextButton(
+style: TextButton.styleFrom(backgroundColor:
+Colors.black),
+onPressed: () {
+playSound(5);
+},
+child: Text("Fifth"),
+),
+),
+Expanded(
+child: TextButton(
+style: TextButton.styleFrom(backgroundColor:
+Colors.purple),
+onPressed: () {
+playSound(6);
+},
+child: Text("Sixth"),
+),
+),
+Expanded(
+child: TextButton(
+style: TextButton.styleFrom(backgroundColor:
+Colors.blueGrey),
+onPressed: () {
+PlayAudio(7);
+},
+child: Text("Seventh"),
+),
+),
+],
+);
+}
+}
+Output:
+
+QUIZ:
+Question.dart
+class Question {
+final String questionText; // Question
+final bool answer; // Answer
+Question({required this.questionText, required this.answer});
+// making it as named arguments for the Question Constructor
+}
+Main.dart
+import 'package:flutter/material.dart';
+import 'package:quiz/question.dart'; // add the question class
+class Questions {
+List<Question> questionBank = [ // create a list of Questions using default
+constructor of Question()
+Question(questionText: "5+9 = 14", answer: true), // set the Question and
+Answer
+Question(questionText: "There is no railway system in Iceland.", answer:
+true),
+Question(questionText: "Is Venus the closest planet to the Sun?", answer:
+false),
+Question(questionText: "Do you need oxygen for breathing?", answer: true),
+Question(questionText: "Honeybees are the fastest flying insect.", answer:
+false),
+Question(questionText: "Humans have 4 senses.", answer: false),
+Question(questionText: "A group of crows is called a ‘murder’.", answer:
+true),
+];
+}
+class QuizPage extends StatefulWidget {
+const QuizPage({Key? key}) : super(key: key);
+@override
+_QuizPageState createState() => _QuizPageState();
+}
+class _QuizPageState extends State<QuizPage> {
+int questionNumber = 0; // stores the questionNumber, default = first
+int currentScore = 0; // final score initialized to 0
+Questions questions = Questions(); // Create an object of the Question Class
+void updateQuestionNumber() {
+setState(() {
+questionNumber = questionNumber + 1; // Increments the Question Number
+print('$questionNumber');
+});
+}
+void udpateCurrentScore(bool choice, int question_number) {
+// based on the choice (T/F button) score will be updated
+if (questions.questionBank.length == question_number) {
+print("End of questions");
+} else {
+// checks the current user input against the list answer, if true increments
+the count
+if (questions.questionBank[question_number].answer == choice) {
+setState(() {
+currentScore++;
+});
+}
+}
+}
+bool checkquestionNumber(int questionNumber) {
+return questionNumber < questions.questionBank.length ? true : false;
+}
+@override
+Widget build(BuildContext context) {
+return Container(
+child: Column(
+crossAxisAlignment: CrossAxisAlignment.stretch,
+children: [
+Center(
+c hild: Text(
+checkquestionNumber(questionNumber)?questions.questionBank[questionNumber].qu
+estionText.toString(): "End",
+style: TextStyle(fontSize: 40.0),
+),
+),
+SizedBox(height: 20.0,),
+if (checkquestionNumber(questionNumber))
+ElevatedButton(onPressed:(){
+setState(() {
+print('True is pressed');
+if (questionNumber == questions.questionBank.length) { //
+check the boundof the list
+print("End of questions");
+}
+else{
+// check the user answer against the answer in the list
+udpateCurrentScore(true, questionNumber);
+// increment the Question Number
+updateQuestionNumber();
+}
+});
+}, child: Text("True")),
+SizedBox(width: 20.0,),
+if (checkquestionNumber(questionNumber))
+ElevatedButton(onPressed:(){
+setState(() {
+print('False is pressed');
+if (questionNumber == questions.questionBank.length) { //
+check the boundof the list
+print("End of questions");
+}
+else{
+// check the user answer against the answer in the list
+udpateCurrentScore(false, questionNumber);
+// increment the Question Number
+updateQuestionNumber();
+}
+});
+}, child: Text("False")),
+SizedBox(height: 100.0,),
+SizedBox(height: 50.0,),
+if(checkquestionNumber(questionNumber))
+Padding(
+padding: const EdgeInsets.all(30.0),
+child: Center(
+child: Text(
+"Current Score is:",
+style: TextStyle(fontSize: 30.0),
+),
+),
+),
+if(!checkquestionNumber(questionNumber))
+Padding(
+padding: const EdgeInsets.all(30.0),
+child: Center(
+child: Text(
+"Total Score is:",
+style: TextStyle(fontSize: 30.0),
+),
+),
+),
+if(checkquestionNumber(questionNumber))
+Padding(
+padding: const EdgeInsets.all(30.0),
+child: Center(
+child: Text(
+'${currentScore}',
+style: TextStyle(fontSize: 30.0),
+),
+),
+),
+if(!checkquestionNumber(questionNumber))
+Padding(
+padding: const EdgeInsets.all(30.0),
+child: Center(
+c hild: Text(
+'${currentScore}'+'/'+questions.questionBank.length.toString(),
+style: TextStyle(fontSize: 30.0),
+),
+),
+),
+],
+),
+); // Build the Widget Tree here
+}
+}
+void main() {
+runApp(MaterialApp(
+home: SafeArea(
+child: Scaffold(
+body:QuizPage(),
+),
+),
+));
+}
+Output:
